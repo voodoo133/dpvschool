@@ -6,7 +6,7 @@ namespace calcProgram
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Здравствуйте. Введите, пожалуйста, выражение в формате \"Число1 Оператор Число2 (например, 1 + 2)\"");
+            Console.WriteLine("Здравствуйте. Введите, пожалуйста, выражение в формате \"Число1 Оператор Число2\" (например, 1 + 2)");
 
             string inputedStr = Console.ReadLine();
             inputedStr = inputedStr.Trim();
