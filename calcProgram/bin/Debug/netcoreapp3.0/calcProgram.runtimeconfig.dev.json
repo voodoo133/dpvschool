@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\VooDoo\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\VooDoo\\.nuget\\packages"
+    ]
+  }
+}

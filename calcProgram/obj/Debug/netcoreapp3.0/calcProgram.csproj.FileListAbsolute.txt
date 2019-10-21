@@ -1,0 +1,11 @@
+D:\dpvschool\calcProgram\bin\Debug\netcoreapp3.0\calcProgram.exe
+D:\dpvschool\calcProgram\bin\Debug\netcoreapp3.0\calcProgram.deps.json
+D:\dpvschool\calcProgram\bin\Debug\netcoreapp3.0\calcProgram.runtimeconfig.json
+D:\dpvschool\calcProgram\bin\Debug\netcoreapp3.0\calcProgram.runtimeconfig.dev.json
+D:\dpvschool\calcProgram\bin\Debug\netcoreapp3.0\calcProgram.dll
+D:\dpvschool\calcProgram\bin\Debug\netcoreapp3.0\calcProgram.pdb
+D:\dpvschool\calcProgram\obj\Debug\netcoreapp3.0\calcProgram.csprojAssemblyReference.cache
+D:\dpvschool\calcProgram\obj\Debug\netcoreapp3.0\calcProgram.AssemblyInfoInputs.cache
+D:\dpvschool\calcProgram\obj\Debug\netcoreapp3.0\calcProgram.AssemblyInfo.cs
+D:\dpvschool\calcProgram\obj\Debug\netcoreapp3.0\calcProgram.dll
+D:\dpvschool\calcProgram\obj\Debug\netcoreapp3.0\calcProgram.pdb
