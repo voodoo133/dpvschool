@@ -6,20 +6,23 @@ namespace calcProgram
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Здравствуйте. Введите, пожалуйста, выражение в формате \"Число1 Оператор Число2\" (например, 1 + 2)");
+            string greetingMsg = "Здравствуйте.\nВведите, пожалуйста, выражение в формате \"Число1 Оператор Число2\" (например, 1 + 2)\nВведите show history для просмотра операций\nВведите exit для выхода";
+            Console.WriteLine(greetingMsg);
 
-            string inputedStr = Console.ReadLine();
-            inputedStr = inputedStr.Trim();
+            var c = new Calculator();
 
-            var c = new Calculator(inputedStr);
+            while (true) {
+                string inputedStr = Console.ReadLine();
+                inputedStr = inputedStr.Trim();
 
-            c.exec();
-
-            if (c.error) {
-                Console.WriteLine(c.errorMessage);
-            } else {
+                c.exec(inputedStr);
+                
                 Console.WriteLine(c.result);
+
+                if (c.stop) 
+                    break;
             }
+            
         }
     }
 }
