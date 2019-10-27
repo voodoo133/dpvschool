@@ -13,7 +13,7 @@ namespace Turnip
             if (!characterList.Contains(c))
                 characterList.Add(c);
             else 
-                Console.WriteLine($"{c.name} уже добавлен");
+                Console.WriteLine($"{c.name} уже добавлен(a)");
         }
 
         public void pull ()
