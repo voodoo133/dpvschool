@@ -10,7 +10,7 @@ namespace Turnip
 
         public void add (Character c)
         {
-            if (!characterList.Contains(c))
+            if (!characterList.Contains(c) && !characterList.Exists(x => x.GetType() == c.GetType()))
                 characterList.Add(c);
             else 
                 Console.WriteLine($"{c.name} уже добавлен(a)");
