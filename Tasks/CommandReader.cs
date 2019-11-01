@@ -12,6 +12,7 @@ namespace Tasks
         private string jsonFile = Environment.CurrentDirectory + "\\tasks.json";
 
         private string startMsg = @"Введите addjob для добавления задачи
+Введите editjob для редактирования задачи
 Введите showall для просмотра задач
 Введите exit для выхода";
         private string delimeter = "\r\n-----------------------------------------------\r\n";
@@ -72,6 +73,47 @@ namespace Tasks
                     });
 
                     Console.WriteLine("Задача успешно добавлена" + delimeter);
+
+                    break;
+
+                case "editjob": 
+                    Console.WriteLine("Введите название задачи: ");
+                    string taskName = Console.ReadLine();
+
+                    int taskIndex = Tasks.FindIndex(t => t.Name == taskName);
+
+                    if (taskIndex == -1) {
+                        Console.WriteLine("Задача с таким именем не найдена" + delimeter);
+                    } else {
+                        Job task = Tasks[taskIndex];
+
+                        Console.WriteLine("Введите новое название задачи: ");
+                        string newName = Console.ReadLine();
+                        if (newName.Length != 0) task.Name = newName;
+                        
+                        Console.WriteLine("Введите новое описание задачи: ");
+                        string newDescription = Console.ReadLine();
+                        if (newDescription.Length != 0) task.Description = newDescription;
+
+                        Console.WriteLine("Введите новую метку для задачи: ");
+                        string newTag = Console.ReadLine();
+                        if (newTag.Length != 0) task.Tag = newTag;
+
+                        Console.WriteLine("Введите новую дату выполнения задачи: ");
+                        string newStrDate = Console.ReadLine();
+                        DateTime? newDate;
+
+                        if (newStrDate.Length > 0) {
+                            newDate = Convert.ToDateTime(newStrDate);
+                        } else {
+                            newDate = null;
+                        }
+
+                        if (newDate != null)
+                            task.Date = newDate;
+
+                        Console.WriteLine("Задача успешно изменена" + delimeter);
+                    }
 
                     break;
 
