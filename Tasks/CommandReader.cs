@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
+using System.Linq;
 
 namespace Tasks
 {
     public class CommandReader
     {
-        private List<Job> Tasks = new List<Job>() {};
-
         private string jsonFile = Environment.CurrentDirectory + "\\tasks.json";
 
         private string startMsg = @"Введите addjob для добавления задачи
@@ -21,10 +18,7 @@ namespace Tasks
 
         public CommandReader ()
         {
-            if (File.Exists(jsonFile)) {
-                string json = File.ReadAllText(jsonFile);
-                Tasks = JsonConvert.DeserializeObject<List<Job>>(json);
-            }
+
         }
 
         public void start ()
@@ -63,14 +57,17 @@ namespace Tasks
                         date = null;
                     }
                         
-
-                    Tasks.Add(new Job()
-                    {
-                        Name = name,
-                        Description = description,
-                        Tag = tag,
-                        Date = date
-                    });
+                    using (TasksContext db = new TasksContext()) {
+                        db.Tasks.Add(new Job()
+                        {
+                            Name = name,
+                            Description = description,
+                            Tag = tag,
+                            Date = date
+                        });
+       
+                        db.SaveChanges();
+                    }
 
                     Console.WriteLine("Задача успешно добавлена" + delimeter);
 
@@ -80,60 +77,65 @@ namespace Tasks
                     Console.WriteLine("Введите название задачи: ");
                     string taskName = Console.ReadLine();
 
-                    int taskIndex = Tasks.FindIndex(t => t.Name == taskName);
+                    using (TasksContext db = new TasksContext())
+                    {
+                        Job task = db.Tasks.FirstOrDefault(t => t.Name == taskName);
 
-                    if (taskIndex == -1) {
-                        Console.WriteLine("Задача с таким именем не найдена" + delimeter);
-                    } else {
-                        Job task = Tasks[taskIndex];
-
-                        Console.WriteLine("Введите новое название задачи: ");
-                        string newName = Console.ReadLine();
-                        if (newName.Length != 0) task.Name = newName;
-                        
-                        Console.WriteLine("Введите новое описание задачи: ");
-                        string newDescription = Console.ReadLine();
-                        if (newDescription.Length != 0) task.Description = newDescription;
-
-                        Console.WriteLine("Введите новую метку для задачи: ");
-                        string newTag = Console.ReadLine();
-                        if (newTag.Length != 0) task.Tag = newTag;
-
-                        Console.WriteLine("Введите новую дату выполнения задачи: ");
-                        string newStrDate = Console.ReadLine();
-                        DateTime? newDate;
-
-                        if (newStrDate.Length > 0) {
-                            newDate = Convert.ToDateTime(newStrDate);
+                        if (task == null) {
+                            Console.WriteLine("Задача с таким именем не найдена" + delimeter);
                         } else {
-                            newDate = null;
+                            Console.WriteLine("Введите новое название задачи: ");
+                            string newName = Console.ReadLine();
+                            if (newName.Length != 0) task.Name = newName;
+                            
+                            Console.WriteLine("Введите новое описание задачи: ");
+                            string newDescription = Console.ReadLine();
+                            if (newDescription.Length != 0) task.Description = newDescription;
+
+                            Console.WriteLine("Введите новую метку для задачи: ");
+                            string newTag = Console.ReadLine();
+                            if (newTag.Length != 0) task.Tag = newTag;
+
+                            Console.WriteLine("Введите новую дату выполнения задачи: ");
+                            string newStrDate = Console.ReadLine();
+                            DateTime? newDate;
+
+                            if (newStrDate.Length > 0) {
+                                newDate = Convert.ToDateTime(newStrDate);
+                            } else {
+                                newDate = null;
+                            }
+
+                            if (newDate != null)
+                                task.Date = newDate;
+
+                            db.SaveChanges();
+
+                            Console.WriteLine("Задача успешно изменена" + delimeter);
                         }
-
-                        if (newDate != null)
-                            task.Date = newDate;
-
-                        Console.WriteLine("Задача успешно изменена" + delimeter);
                     }
 
                     break;
 
                 case "showall": 
-                    Tasks.ForEach(delegate (Job j) {
-                        string result = @"Id - {0}
+                    using (TasksContext db = new TasksContext()) {
+                        List<Job> tasks = db.Tasks.ToList();
+
+                        tasks.ForEach(delegate (Job j) {
+                            string result = @"Id - {0}
 Name - {1}
 Description - {2},
 Tag - {3},
 CreatedDate - {4},
 Date - {5}
 ";
-                        Console.WriteLine(result, j.Id, j.Name, j.Description, j.Tag, j.CreationDate, j.Date);
-                    });
+                            Console.WriteLine(result, j.Id, j.Name, j.Description, j.Tag, j.CreationDate, j.Date);
+                        });
+                    }
+
                     break;
 
                 case "exit":
-                    string json = JsonConvert.SerializeObject(Tasks, Formatting.Indented);
-                    File.WriteAllText(jsonFile, json);
-
                     stop = true;
                     break;
 
