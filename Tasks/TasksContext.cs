@@ -5,6 +5,8 @@ namespace Tasks
     public class TasksContext : DbContext
     {
         public DbSet<Job> Tasks { get; set; }
+        public DbSet<User> Users { get; set; }
+         
          
         public TasksContext()
         {

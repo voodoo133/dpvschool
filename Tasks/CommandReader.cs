@@ -8,7 +8,8 @@ namespace Tasks
     {
         private string jsonFile = Environment.CurrentDirectory + "\\tasks.json";
 
-        private string startMsg = @"Введите addjob для добавления задачи
+        private string startMsg = @"Введите adduser для добавления пользователя
+Введите addjob для добавления задачи
 Введите editjob для редактирования задачи
 Введите showall для просмотра задач
 Введите exit для выхода";
@@ -40,6 +41,38 @@ namespace Tasks
             command = command.Trim();
 
             switch (command) {
+                case "adduser":
+                    Console.WriteLine("Введите имя пользователя для задач: ");
+                    string userName = Console.ReadLine();
+
+                    using (TasksContext db = new TasksContext())
+                    {
+                        db.Users.Add(new User() {
+                            Name = userName
+                        });
+
+                        db.SaveChanges();
+
+                        Console.WriteLine("Пользователь успешно добавлен" + delimeter);
+                    }
+
+                    break;
+
+                case "showallusers":
+                    using (TasksContext db = new TasksContext()) {
+                        List<User> tasks = db.Users.ToList();
+
+                        tasks.ForEach(delegate (User u) {
+                            string result = @"Id - {0}
+Name - {1}";
+                            Console.WriteLine(result, u.Id, u.Name);
+                        });
+                    }
+
+                    Console.WriteLine(delimeter);
+
+                    break;
+
                 case "addjob":
                     Console.WriteLine("Введите название задачи: ");
                     string name = Console.ReadLine();
@@ -56,14 +89,19 @@ namespace Tasks
                     } else {
                         date = null;
                     }
-                        
+
+                    Console.WriteLine("Введите ID пользователя для задачи: ");
+                    string userIdString = Console.ReadLine();
+                    int userId;
+
                     using (TasksContext db = new TasksContext()) {
                         db.Tasks.Add(new Job()
                         {
                             Name = name,
                             Description = description,
                             Tag = tag,
-                            Date = date
+                            Date = date,
+                            UserId = (Int32.TryParse(userIdString, out userId)) ? userId : (int?)null
                         });
        
                         db.SaveChanges();
@@ -119,19 +157,35 @@ namespace Tasks
 
                 case "showall": 
                     using (TasksContext db = new TasksContext()) {
-                        List<Job> tasks = db.Tasks.ToList();
+                        var tasks = db.Tasks.Join(db.Users,
+                            t => t.UserId,
+                            u => u.Id,
+                            (t, u) => new {
+                                Id = t.Id, 
+                                Name = t.Name,
+                                Description = t.Description,
+                                Tag = t.Tag,
+                                CreationDate = t.CreationDate,
+                                Date = t.Date,
+                                Username = u.Name
+                            }
+                        );
 
-                        tasks.ForEach(delegate (Job j) {
+                        foreach (var t in tasks)
+                        {
                             string result = @"Id - {0}
 Name - {1}
 Description - {2},
 Tag - {3},
-CreatedDate - {4},
+CreationDate - {4},
 Date - {5}
+Username - {6}
 ";
-                            Console.WriteLine(result, j.Id, j.Name, j.Description, j.Tag, j.CreationDate, j.Date);
-                        });
+                            Console.WriteLine(result, t.Id, t.Name, t.Description, t.Tag, t.CreationDate, t.Date, t.Username);
+                        }
                     }
+
+                    Console.WriteLine(delimeter);
 
                     break;
 
