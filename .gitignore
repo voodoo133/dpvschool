@@ -2,3 +2,7 @@
 /*/bin
 /*/obj
 /tasks/tasks.json
+Tasks/Tasks.Web/obj/
+Tasks/Tasks.Web/bin/
+Tasks/Tasks.Data/bin/
+Tasks/Tasks.Data/obj/

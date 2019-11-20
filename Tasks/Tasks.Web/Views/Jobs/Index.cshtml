@@ -1,0 +1,66 @@
+@model JobsViewModel
+@{
+    ViewData["Title"] = "Jobs list";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Jobs List</h1>
+
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Tag</th>
+            <th>CreationDate</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+        @foreach (var job in Model.Jobs)
+        {
+        <tr>
+            <td>@job.Name</td>
+            <td>@job.Description</td>
+            <td>@job.Tag</td>
+            <td>@job.CreationDate</td>
+            <td>@job.Date</td>
+            <td><button class="update-job btn btn-success" data-toggle="modal" data-target="#job-modal" data-id="@job.Id">&#9998;</button></td>
+        </tr>
+        }
+    </table>
+    <button class="add-job btn btn-info" data-toggle="modal" data-target="#job-modal">Добавить задачу</button>
+</div>
+<div class="modal" id="job-modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Добавить задачу</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <form action="/Jobs/Add" class="job-modal__form" method="POST">
+        <input name="Id" value="" type="hidden" disabled/>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="job-name">Название задачи:</label>
+                <input class="form-control" type="text" name="Name" id="job-name">
+            </div>
+            <div class="form-group">
+                <label for="job-desc">Описание задачи:</label>
+                <textarea class="form-control" name="Description" id="job-desc"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="job-tag">Метка для задачи:</label>
+                <input class="form-control" type="text" name="Tag" id="job-tag">
+            </div>
+            <div class="form-group">
+                <label for="job-date">Дата выполнения:</label>
+                <input class="form-control" type="date" name="Date" id="job-date">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit">Добавить</button>
+            <button class="btn btn-basic" type="button" data-dismiss="modal">Закрыть</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
